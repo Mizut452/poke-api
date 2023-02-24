@@ -3,20 +3,12 @@ class SearchController < ApplicationController
     require 'net/http'
     require 'json'
 
-  if poke_code = params[:poke_code]
+    uri = URI.parse("https://pokeapi.co/api/v2/pokemon/pikachu")
 
-    params = URI.encode_www_form({zipcode: poke_code})
-
-
-    uri = URI.parse("https://pokeapi.co/api/v2/pokemon/#{params}")
+    raw_response = Faraday.get "https://pokeapi.co/api/v2/pokemon/#{params[:poke_code]}"
 
     response = Net::HTTP.get_response(uri)
-    result = JSON.parse(response.body)
-
-  if result["id"]
-    @Poke_Id = result["id"][0]["id"]
-  end
-end
+    @result = JSON.parse(raw_response.body)
 end
 
 end
